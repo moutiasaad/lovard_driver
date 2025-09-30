@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "703248134155",
+    "project_id": "lovarddriverapp",
+    "storage_bucket": "lovarddriverapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703248134155:android:0544f80a6692c4b0c5d70e",
+        "android_client_info": {
+          "package_name": "com.lovard_delivery_app.lovard_delivery_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM564nh6no-BdqAiEMjxnnAu2ntrNr_vE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

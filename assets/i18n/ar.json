@@ -1,0 +1,226 @@
+{
+  "login": {
+    "welcome": "مرحبا بك في كباتن لوفارد!",
+    "enterNumber": "ادخل رقم الهاتف لتسجيل الدخول وتفعيل حسابك بعد تسجيلك في موقع لوفارد الرسمي",
+    "phoneNumber": "رقم الهاتف",
+    "continueAccept": "بالمتابعة فأنك توافق على",
+    "privacyPolicy": "الشروط و الأحكام",
+    "checkNumber": "التحقق",
+    "codeSendIt": "لقد ارسلنا رمز للتحقق من الرقم",
+    "permissionCode": "يمكنك طلب رمز جديد بعد",
+    "getNewCode": "احصل على رمز جديد",
+    "diNotGetCode": "لم يصلك رمز؟",
+    "whatName": "ما هو اسمك؟",
+    "name": "الاسم",
+    "whatEmail": "البريد الالكتروني الخاص بك؟",
+    "email": "البريد الالكتروني",
+    "firstName": "الأسم الأول",
+    "lastName": "الأسم الأخير",
+    "fullName": "الاسم الكامل"
+  },
+  "waitingMessage": {
+    "waiting": "الرجاء الانتظار قليلا",
+    "checking": "جاري التثبت من العملية"
+  },
+  "home": {
+    "orderToYou": "طلبات موجهة لك",
+    "allOrder": "جميع الطلبات",
+    "seeToDayOrder": "لنلقي نظرة على طلبات اليوم",
+    "welcome": "مرحبا",
+    "events": "المناسبات",
+    "shops": "المحلات التجارية",
+    "digitalShops": "المتاجر الإلكترونية",
+    "topDemandProducts": "أكثر المنتجات طلباً",
+    "deliveredAt": "توصيل الى",
+    "search": "أبحث عن اسم منتج او محل..",
+    "allProducts": "جميع المنتجات"
+  },
+  "createDesign": {
+    "makeDesign": "صمم هديتك بنفسك",
+    "coverType": "خامة الغلاف",
+    "coverColor": "لون الغلاف",
+    "tapeType": "خامة الشريط",
+    "tapeColor": "لون الشريط",
+    "flowerType": "انواع الورد",
+    "cardType": "صمم بطاقتك"
+  },
+  "products": {
+    "recommended": "منتجات قد تعجبك ايضاً",
+    "allProducts": "جميع المنتجات",
+    "describeProduct": "وصف المنتج"
+  },
+  "errorMessages": {
+    "otpCode": "رمز التحقق غير صحيح"
+  },
+  "sheets": {
+    "addCartDesign": {
+      "title": "تفاصيل المنتج",
+      "flowerType": "نوع الورد المستخدم",
+      "flowerNumber": "عدد الوردات المستخدمة",
+      "coverType": "خامة الغلاف",
+      "tapeType": "خامة الشريط"
+    },
+    "addCartDetails": {
+      "title": "معلومات التوصيل",
+      "receiverDetail": "تفاصيل المستلم",
+      "receiverName": "اسم المستلم",
+      "toDay": "اليوم",
+      "tomorrow": " غدا  ",
+      "selectDay": "حدد يوم",
+      "selectDate": "إختر التاريخ",
+      "selectInterval": "حدد مجال",
+      "deliveryTime": "توقيت التوصيل",
+      "deliveryDate": "تاريخ التوصيل"
+    },
+    "location": {
+      "title": "العنوان"
+    }
+  },
+  "bottomBar": {
+    "home": "الرئيسية",
+    "shop": "المتاجر",
+    "profile": "حسابي",
+    "order": "طلباتي",
+    "notification": "الاشعارات"
+  },
+  "favorite": {
+    "title": "المنتجات المفضلة"
+  },
+  "cart": {
+    "title": "طلباتي"
+  },
+  "shop": {
+    "title": "المتاجر",
+    "open": "مفتوح",
+    "close": "مغلق"
+  },
+  "search": {
+    "hint": "أبحث عن اسم منتج او محل..",
+    "shops": "محلات تجارية",
+    "products": "منتجات",
+    "oldSearch": "بحثك السابق",
+    "clear": "حذف الكل"
+  },
+  "orderDetail": {
+    "orderNumber": "رقم الطلب",
+    "orderDate": "تاريخ الطلب",
+    "address": "العنوان :",
+    "receiverName": "اسم المستلم :",
+    "orderOwner": "صاحب الطلب",
+    "phoneReceiver": "رقم الهاتف المستلم :",
+    "totalPrice": "الإجمالي",
+    "deliveryFee": "رسوم التوصيل"
+  },
+  "errorsMessage": {
+    "getData": "حدث خطأ اثناء تحميل البيانات",
+    "connection": "مشكلة في الاتصال. يرجى التحقق من اتصالك.",
+    "undefinedTitle": "هناك خطأ ما!",
+    "undefinedDesc": "نحن نواجه بعض الصعوبات. حاول مرة اخرى",
+    "connectionTitle": "اتصال ضعيف!",
+    "ConnectionDesc": "عذرا ، لم يتم العثور على اتصال بالإنترنت. يرجى التحقق من اتصالك",
+    "notFoundTitle": "لم يتم العثور على النتيجة!",
+    "notFoundDesc": "عذرا، لا يمكن العثور على الصفحة التي تبحث عنها",
+    "addWhiteList": "حدث خطأ أثناء إضافة المنتج إلى المفضلة",
+    "removeWhiteList": "حدث خطأ أثناء إزالة المنتج من المفضلة",
+    "numberEmpty": "رقم الهاتف لا ينبغي أن يكون فارغا",
+    "numberContain": "يجب أن يحتوي رقم الهاتف على 9 أرقام",
+    "fullNameEmpty": "لا ينبغي أن يكون الاسم فارغا",
+    "emailEmpty": "لا ينبغي أن يكون البريد الإلكتروني فارغًا",
+    "noFavoriteProductTitle": "المفضلة فارغة",
+    "noFavoriteProductDesc": "ليس لديك اي منتجات مضافة للمفضلة!",
+    "noOrdersTitle": "لا يوجد اي طلبات هنا بعد!",
+    "noOrdersDesc": "ستعرض الطلبات هنا في حالة توفر اي منها",
+    "paymentTitle": "حدث خطاء في الدفع",
+    "paymentDesc": "حدث خطاء اثناء عملية الدفع، يرجى المحاولة مرة اخرى",
+    "nameEmpty": "الاسم لا ينبغي أن يكون فارغا",
+    "lastNameEmpty": "الاسم الأخير لا ينبغي أن يكون فارغا",
+    "emailInvalid": "البريد الإلكتروني غير صالح",
+    "addToCart": "حدث خطأ أثناء إضافة المنتج إلى السلة",
+    "removeFromCart": "حدث خطأ أثناء إزالة المنتج من السلة",
+    "addOrder": "حدث خطأ أثناء إضافة الطلب",
+    "rateOrder": "حدث خطأ أثناء تقييم الطلب",
+    "updateOrder": "حدث خطأ أثناء تحديث الطلب",
+    "setLocation": "حدث خطأ أثناء تحديد الموقع",
+    "AddFavorite": "حدث خطأ أثناء إضافة المنتج إلى المفضلة",
+    "removeFavorite": "حدث خطأ أثناء إزالة المنتج من المفضلة",
+    "deleteAccount": "حدث خطأ أثناء حذف الحساب",
+    "undefinedError": "حدث خطأ أثناء العملية",
+    "undefinedErrorDesc": "يرجى إعادة التسجيل والمحاولة مرة أخرى.",
+    "assignOrder": "حدث خطاء اثناء قبول الطلب",
+    "unAssignOrder": "حدث خطاء اثناء رفض الطلب"
+  },
+  "successMessage": {
+    "paymentTitle": "تمت عملية الدفع بنجاح",
+    "paymentDesc": "تمت عملية الدفع بنجاح وسيتم التواصل معك لتأكيد الطلب",
+    "rateAdd": "تم إرسال تقييمك بنجاح !",
+    "assignOrder": "تم قبول الطلب بنجاح",
+    "unAssignOrder": "تم رفض الطلب بنجاح"
+  },
+  "makeOrder": {
+    "receiverLocation": "موقع المستلم",
+    "goals": "عبارة الأهداء",
+    "payReceiptLabel": "قسيمة الشراء ان وجد",
+    "payReceipt": "قسيمة الشراء"
+  },
+  "filter": {
+    "title": "الفلترة",
+    "price": "السعر",
+    "lowHigh": "السعر من الأدنى إلى الأعلى",
+    "highLow": "السعر من الأعلى إلى الأدنى"
+  },
+  "profile": {
+    "title": "الحساب الشخصي",
+    "detail": "بياناتي",
+    "wallet": "المحفظة",
+    "privacy": "سياسة الخصوصية والاستخدم",
+    "logout": "تسجيل الخروج",
+    "deleteAccount": "حذف الحساب"
+  },
+  "order": {
+    "orderNumber": "رقم الطلب",
+    "orderTime": "وقت الطلب",
+    "orderDate": "تاريخ الطلب",
+    "orderDeliveryDate": "تاريخ تسليم الطلب",
+    "orderStatus": "حالة الطلب",
+    "orderDetail": {
+      "orderStatus": "حالة الطلب",
+      "customer": "العميل",
+      "orderNumber": "الطلب رقم",
+      "location": "عنوان التوصيل",
+      "product": "المنتجات",
+      "summary": "ملخص الطلب",
+      "date": "تاريخ الطلب",
+      "sumExtra": "المجموع الفرعي",
+      "discount": "خصم",
+      "deliveryFee": "رسوم التوصيل",
+      "addition": "ضريبة القيمة المضافة",
+      "sum": "المجموع الكلي"
+    }
+  },
+  "buttons": {
+    "orderDetail": "تفاصيل الطلب",
+    "acceptOrder": "قبول الطلب",
+    "continue": "استمرار",
+    "skip": "تخطي",
+    "shareLocation": "مشاركة موقعي الحالي",
+    "shareLocationManually": "تحديد الموقع بشكل يدوي",
+    "later": "لاحقاً",
+    "acceptAccess": "السماح",
+    "goCart": "التوجه للسلة",
+    "select": "إختيار",
+    "makeDesign": "صمم هديتك",
+    "save": "حفظ",
+    "cancel": "الغاء",
+    "addToCart": "اضف للسلة",
+    "seeProducts": "تصفح المنتجات",
+    "login": "تسجيل الدخول",
+    "pay": "دفع",
+    "confirm": "تأكيد",
+    "ok": "حسنا",
+    "review": "تقييم",
+    "rate": "ارسال التقييم",
+    "filter": "تصفية",
+    "change": "تغيير",
+    "updateOrder": " تحديث الحالة"
+  }
+}
