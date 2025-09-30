@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 6), () {
+    Future.delayed(Duration(seconds: 2), () {
       initialData().then((value) {
         Navigator.pushReplacement(
           context,
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Center(
         child: Image.asset(
-          'assets/animation/splash.gif',
+          'assets/animation/splash1.gif',
           height: height,
           width: width,
           fit: BoxFit.fill,
