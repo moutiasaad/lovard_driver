@@ -54,7 +54,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
-      print("sttttttttttttttttttttttttt"+widget.data.status.toString());
+      print("sttttttttttttttttttttttttt"+widget.data.merchant!.whatsapp.toString());
       final isAccepted = widget.data.status == "تم قبول الطلب";
 
       return Scaffold(
@@ -139,7 +139,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                           text: widget.data.merchant!.name ?? '',
                           style: AppTextStyle.semiBoldBlack14,
                         ),
-                        Row(
+                        !widget.data.merchant!.whatsapp!.isEmpty ? Row(
                           mainAxisAlignment:
                           MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,7 +191,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                               ),
                             ),
                             // ✅ WhatsApp Icon clickable
-                            InkWell(
+                            widget.data.merchant?.whatsapp != null ? InkWell(
                               borderRadius: BorderRadius.circular(8),
                               onTap: () async {
                                 final whatsappNumber =
@@ -238,8 +238,14 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                                 height: 22,
                                 color: const Color(0xFF25D366),
                               ),
+                            ):cText(
+                              text: '_',
+                              style: AppTextStyle.semiBoldBlack14,
                             ),
                           ],
+                        ):cText(
+                          text: '-',
+                          style: AppTextStyle.semiBoldBlack14,
                         ),
                       ],
                     )
