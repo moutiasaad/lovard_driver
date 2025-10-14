@@ -4,6 +4,7 @@
     "enterNumber": "ادخل رقم الهاتف لتسجيل الدخول وتفعيل حسابك بعد تسجيلك في موقع لوفارد الرسمي",
     "phoneNumber": "رقم الهاتف",
     "continueAccept": "بالمتابعة فأنك توافق على",
+    "enterCode": "أدخل رمز التحقق",
     "privacyPolicy": "الشروط و الأحكام",
     "checkNumber": "التحقق",
     "codeSendIt": "لقد ارسلنا رمز للتحقق من الرقم",
@@ -185,6 +186,7 @@
     "orderDetail": {
       "orderStatus": "حالة الطلب",
       "customer": "العميل",
+      "marchent": "المتجر",
       "orderNumber": "الطلب رقم",
       "location": "عنوان التوصيل",
       "product": "المنتجات",

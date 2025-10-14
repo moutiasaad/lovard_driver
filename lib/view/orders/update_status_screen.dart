@@ -2,10 +2,8 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lovard_delivery_app/shared/language/extension.dart';
-
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../models/enum/order_status.dart';
 import '../../../providers/order_provider.dart';
 import '../../../shared/components/appBar/design_sheet_app_bar.dart';
@@ -17,7 +15,6 @@ import '../../../shared/logique_function/time_function.dart';
 import '../../../utils/app_text_styles.dart';
 import '../../../utils/colors.dart';
 import 'package:intl/intl.dart';
-
 import '../../models/order_model.dart';
 import '../../shared/components/buttons/cancel_button.dart';
 import '../../shared/components/buttons/default_outlined_button.dart';
@@ -41,30 +38,25 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
 
   void _setMapGesture(bool isInteracting) {
     setState(() {
-      print('${_isMapInteracting}   sdqdsssd');
       _isMapInteracting = isInteracting;
     });
   }
 
   @override
   void initState() {
-
-    Future.microtask(() =>
-        context.read<OrderProvider>().getDriverStatuses(
-          driverId: context.read<OrderProvider>().userId, // or 16 for testing
-        ));
+    Future.microtask(() => context.read<OrderProvider>().getDriverStatuses(
+      driverId: context.read<OrderProvider>().userId,
+    ));
     orderDate = '';
-    //     DateFormat('yyyy/MM/dd hh:mm a')
-    //     .format(DateTime.parse(widget.data.createDate!));
-    // print(widget.data.createDate);
-    // print(orderDate);
-    // print(widget.data.cardDescription);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
+      print("sttttttttttttttttttttttttt"+widget.data.status.toString());
+      final isAccepted = widget.data.status == "تم قبول الطلب";
+
       return Scaffold(
         appBar: AppBar(
           leading: CancelButton(
@@ -72,11 +64,12 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
             icon: Icons.arrow_back,
           ),
           title: cText(
-              text: context.translate('order.orderDetail.orderNumber') +
-                  ' ' +
-                  widget.data.lines!.driverOrderId.toString() +
-                  '#',
-              style: AppTextStyle.semiBoldBlack14),
+            text: context.translate('order.orderDetail.orderNumber') +
+                ' ' +
+                widget.data.lines!.driverOrderId.toString() +
+                '#',
+            style: AppTextStyle.semiBoldBlack14,
+          ),
           elevation: 0.5,
           backgroundColor: BackgroundColor.background,
         ),
@@ -86,11 +79,21 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ✅ Conditional map rendering
               SizedBox(
                 height: 400,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: MapScreenComponent(
+                  child: isAccepted
+                      ? MapScreenComponent(
+                    zoom: 12,
+                    merchantName: widget.data.merchant!.name!,
+                    userName: widget.data.fullName,
+                    latitudeS: double.parse(widget.data.latitudeM!),
+                    longitudeS: double.parse(widget.data.longitudeM!),
+                    onFullScreen: true,
+                  )
+                      : MapScreenComponent(
                     zoom: 12,
                     merchantName: widget.data.merchant!.name!,
                     userName: widget.data.fullName,
@@ -102,8 +105,150 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+
+              // ✅ Conditional contact section
+              isAccepted
+                  ? Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16, horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 8,
+                      children: [
+                        SvgIcon(
+                          icon: AppIcons.profileFill,
+                          width: 24,
+                          height: 24,
+                        ),
+                        cText(
+                          text: context
+                              .translate('order.orderDetail.marchent'),
+                          style: AppTextStyle.semiBoldPrimary20,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        cText(
+                          text: widget.data.merchant!.name ?? '',
+                          style: AppTextStyle.semiBoldBlack14,
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // ✅ WhatsApp number
+                            InkWell(
+                              onTap: () async {
+                                final whatsappNumber =
+                                    widget.data.merchant?.whatsapp ?? '';
+                                final orderId = widget.data.lines
+                                    ?.driverOrderId
+                                    ?.toString() ??
+                                    '';
+
+                                if (whatsappNumber.isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content: Text('رقم واتساب غير متوفر'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                final message = Uri.encodeComponent(
+                                  'مرحبًا، أود الاستفسار عن الطلب رقم $orderId',
+                                );
+                                final url = Uri.parse(
+                                    'https://wa.me/$whatsappNumber?text=$message');
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                      Text('تعذر فتح تطبيق واتساب'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                widget.data.merchant?.whatsapp ?? '',
+                                style: AppTextStyle.regularBlack1_14,
+                              ),
+                            ),
+                            // ✅ WhatsApp Icon clickable
+                            InkWell(
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () async {
+                                final whatsappNumber =
+                                    widget.data.merchant?.whatsapp ?? '';
+                                final orderId = widget.data.lines
+                                    ?.driverOrderId
+                                    ?.toString() ??
+                                    '';
+
+                                if (whatsappNumber.isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content: Text('رقم واتساب غير متوفر'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                final message = Uri.encodeComponent(
+                                  'مرحبًا، أود الاستفسار عن الطلب رقم $orderId',
+                                );
+                                final url = Uri.parse(
+                                    'https://wa.me/$whatsappNumber?text=$message');
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                      Text('تعذر فتح تطبيق واتساب'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: SvgIcon(
+                                icon: AppIcons.whatsapp,
+                                width: 22,
+                                height: 22,
+                                color: const Color(0xFF25D366),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+                  : Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16, horizontal: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -112,31 +257,37 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                       spacing: 4,
                       children: [
                         cText(
-                            text: widget.data.fullName ?? '',
-                            style: AppTextStyle.semiBoldBlack14),
+                          text: widget.data.fullName ?? '',
+                          style: AppTextStyle.semiBoldBlack14,
+                        ),
                         cText(
-                            text: widget.data.phone ?? '',
-                            style: AppTextStyle.regularBlack1_14),
+                          text: widget.data.phone ?? '',
+                          style: AppTextStyle.regularBlack1_14,
+                        ),
                       ],
                     ),
                     Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: BackgroundColor.grey1,
-                        ),
-                        child: SvgIcon(icon: AppIcons.phone))
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: BackgroundColor.grey1,
+                      ),
+                      child: SvgIcon(icon: AppIcons.phone),
+                    ),
                   ],
                 ),
               ),
+
+              // ---- Keep rest of your screen unchanged ----
               Container(
                 width: double.infinity,
                 height: 1,
                 color: BorderColor.grey1,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                padding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 child: cText(
                   text: widget.data.address ?? '',
                   style: AppTextStyle.semiBoldBlack14,
@@ -149,7 +300,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 16,
@@ -245,7 +396,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                                     // space between steps
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         cText(
                                           text: item.title ?? 'Title',
@@ -255,7 +406,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                                           text: item.date == '-'
                                               ? '--'
                                               : convertToArabicDate(
-                                                  item.date ?? ''),
+                                              item.date ?? ''),
                                           style: AppTextStyle.regularBlack1_14,
                                         ),
                                       ],
@@ -280,17 +431,18 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                   ],
                 ),
               ),
+              // Rest of content (statuses, button, etc.) remains the same...
             ],
           ),
         ),
       );
     });
   }
-
   void _showStatusSheet({
     required OrderProvider order,
     required int orderId,
-  }) {
+  })
+  {
     showModalBottomSheet(
       context: context,
       builder: (context) {

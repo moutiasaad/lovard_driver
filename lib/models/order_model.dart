@@ -48,7 +48,7 @@ class OrderModel {
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
-      id: int.parse(json['id'].toString()),
+      id: int.parse(json['order_id'].toString()),
       merchantId: int.parse(json['merchant_id'].toString()),
 
       address: json['address'],

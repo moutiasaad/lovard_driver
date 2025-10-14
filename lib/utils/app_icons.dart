@@ -8,6 +8,7 @@ class AppIcons {
   /// icons
   static const String home = '${basePath}home.svg';
   static const String filter = '${basePath}filter.svg';
+  static const String whatsapp = '${basePath}whatsapp-color-svgrepo-com.svg';
   static const String clock = '${basePath}clock.svg';
   static const String fileStyle = '${basePath}file_style.svg';
   static const String location = '${basePath}location.svg';

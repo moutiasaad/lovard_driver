@@ -6,15 +6,14 @@ import '../../../utils/colors.dart';
 import '../text/CText.dart';
 
 class VerificationField extends StatefulWidget {
-  const VerificationField(
-      {super.key,
-      //required this.code,
-      required this.secondsRemaining,
-      required this.data,
-      required this.forword,
-      required this.clear});
+  const VerificationField({
+    super.key,
+    required this.secondsRemaining,
+    required this.data,
+    required this.forword,
+    required this.clear,
+  });
 
-  // final int code;
   final int secondsRemaining;
   final RegisterModel data;
   final Function forword;
@@ -25,37 +24,18 @@ class VerificationField extends StatefulWidget {
 }
 
 class _VerificationFieldState extends State<VerificationField> {
-  List<TextEditingController> controllers =
-      List.generate(6, (index) => TextEditingController());
-  List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
+  final TextEditingController codeController = TextEditingController();
 
   @override
   void initState() {
     widget.clear();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(focusNodes[0]);
-    });
     super.initState();
   }
 
   @override
   void dispose() {
-    for (var node in focusNodes) {
-      node.dispose();
-    }
-    for (var controllers in controllers) {
-      controllers.dispose();
-    }
+    codeController.dispose();
     super.dispose();
-  }
-
-  void moveFocusToEmptyField() {
-    for (int i = 0; i < controllers.length; i++) {
-      if (controllers[i].text.isEmpty) {
-        FocusScope.of(context).requestFocus(focusNodes[i]);
-        break;
-      }
-    }
   }
 
   @override
@@ -63,84 +43,99 @@ class _VerificationFieldState extends State<VerificationField> {
     final registerProvider = Provider.of<RegisterProvider>(context);
 
     return Center(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            6,
-            (index) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 6.0),
-              width: 46.0,
-              height: 55.0,
-              child: TextField(
-                  readOnly: widget.secondsRemaining == 0 ? true : false,
-                  controller: controllers[index],
-                  maxLength: 1,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  textAlign: TextAlign.center,
-                  focusNode: focusNodes[index],
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                      borderSide: BorderSide(
-                        color: registerProvider.isOtpError == false
-                            ? BorderColor.grey
-                            : BorderColor.red,
-                        width: 1.0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: registerProvider.isOtpError == false
-                            ? BorderColor.secondary
-                            : BorderColor.red,
-                        width: 1.0,
-                      ),
-                    ),
-                    counterText: '',
-                  ),
-                  onChanged: (value) {
-                    if (value.length == 1 && index < 5) {
-                      focusNodes[index + 1].requestFocus();
-                    } else if (value.isEmpty && index > 0) {
-                      focusNodes[index - 1].requestFocus();
-                    }
-                    if (value.length == 1 && index == 5) {
-                      validateCode(registerProvider);
-                    }
-                  },
-                  onTap: () {
-                    setState(() {
-                      registerProvider.otpError = false;
-                    });
-
-                    moveFocusToEmptyField();
-                  }),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Normal single input field for code
+          TextField(
+            controller: codeController,
+            keyboardType: TextInputType.number,
+            maxLength: 6,
+            enabled: widget.secondsRemaining != 0,
+            textAlign: TextAlign.start, // normal left text position
+            decoration: InputDecoration(
+              labelText: "أدخل رمز التحقق", // Arabic: Enter verification code
+              counterText: "",
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 16,
+                horizontal: 14,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: registerProvider.isOtpError == false
+                      ? BorderColor.grey
+                      : BorderColor.red,
+                  width: 1.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: registerProvider.isOtpError == false
+                      ? BorderColor.secondary
+                      : BorderColor.red,
+                  width: 1.0,
+                ),
+              ),
+              errorText: registerProvider.isOtpError
+                  ? "رمز التحقق غير صحيح"
+                  : null, // Arabic: Incorrect verification code
             ),
+            onChanged: (value) {
+              // Reset error when user types
+              if (registerProvider.isOtpError) {
+                registerProvider.otpError = false;
+              }
+
+              // Automatically validate when 6 digits are entered
+              if (value.length == 6) {
+                validateCode(registerProvider);
+              }
+            },
+            onTap: () {
+              setState(() {
+                registerProvider.otpError = false;
+              });
+            },
           ),
-        ),
-        const SizedBox(
-          height: 20 / 2,
-        ),
-        verificationCodeError(
-            error: registerProvider.isOtpError, context: context),
-      ],
-    ));
+
+          const SizedBox(height: 8),
+
+          // Error message below field
+          verificationCodeError(
+            error: registerProvider.isOtpError,
+            context: context,
+          ),
+        ],
+      ),
+    );
   }
 
   void validateCode(RegisterProvider registerProvider) {
-    String combinedValue = '';
-    for (TextEditingController i in controllers.reversed) {
-      combinedValue += i.text;
+    final String enteredCode = codeController.text.trim();
+
+    if (enteredCode.isEmpty || enteredCode.length != 6) {
+      setState(() {
+        registerProvider.otpError = true;
+      });
+      return;
     }
 
-    // Combine the values
-
-    int result = int.parse(combinedValue);
-    registerProvider.verifierOtp(widget.data, context, widget.forword, result);
+    try {
+      final int result = int.parse(enteredCode);
+      registerProvider.verifierOtp(
+        widget.data,
+        context,
+        widget.forword,
+        result,
+      );
+    } catch (e) {
+      setState(() {
+        registerProvider.otpError = true;
+      });
+    }
   }
 }

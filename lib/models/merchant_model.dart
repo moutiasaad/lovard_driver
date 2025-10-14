@@ -8,6 +8,7 @@ class MerchantModel {
       this.cityId,
       this.streetName,
       this.desc,
+        this.whatsapp,
       this.latitude,
       this.longitude,
       this.openAt,
@@ -28,6 +29,7 @@ class MerchantModel {
   final int? cityId;
   final String? streetName;
   final String? desc;
+  final String? whatsapp;
   final String? latitude;
   final String? longitude;
   final String? openAt;
@@ -57,6 +59,7 @@ class MerchantModel {
         isCustomize: json['enable_customization'] == 0 ? false : true,
         isOpen: json['is_open'] ?? false,
         distance: json['distance'] ?? '',
+        whatsapp: json['whatsapp_number'] ?? '',
         attributes: json['attributes'] ?? {},
         isDisabled: json['is_disabled'] ?? false,
         star: json['star'] ?? 0,
