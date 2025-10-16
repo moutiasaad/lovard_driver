@@ -60,21 +60,28 @@ class RegisterProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> verifierOtp(RegisterModel data, BuildContext context,
-      Function Forword, int otp) async {
+  Future<void> verifierOtp(
+      RegisterModel data,
+      BuildContext context,
+      Function forword,
+      int otp,
+      ) async {
     otpError = false;
     notifyListeners();
+
+    // Show loading dialog
     otpLoading(context);
 
-    await handleNotificationPermission(context).then((fcmToken) async {
     try {
+      final fcmToken = await handleNotificationPermission(context);
+
       final response = await DioHelper.postData(
         withToken: false,
         url: 'drivers/verify-otp',
         data: {
           "driver_id": data.userId,
           "otp": otp,
-             "fcm_token": fcmToken
+          "fcm_token": fcmToken,
         },
       );
 
@@ -83,14 +90,16 @@ class RegisterProvider extends ChangeNotifier {
 
       loading = false;
       notifyListeners();
-      Navigator.pop(context);
 
-      // if (response.data['redirect_to'] == '/update-profile') {
-      //   data.token = response.data['token'];
-      //   Forword();
-      // } else {
+      // ✅ Safely close the loading dialog (works on iOS & Android)
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+
+      // ✅ Save token and user data securely
       await SecureCashHelper.setToken(response.data['token']);
       await CashHelper.setUserId(data.userId!);
+
       UserModel user = UserModel(
         fullName: response.data['user']['name'],
         email: response.data['user']['email'],
@@ -98,24 +107,31 @@ class RegisterProvider extends ChangeNotifier {
         image: response.data['user']['image'],
       );
       await CashHelper.setUserData(user);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const DriverHomeLayout(),
-        ),
-      );
-      // }
+
+      // ✅ Safely navigate to home screen
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const DriverHomeLayout()),
+        );
+      }
     } catch (error) {
+      // ✅ Ensure loading dialog is closed even on error
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+
       if (error is DioException) {
         otpError = true;
+        print("OTP verification failed: ${error.response?.data}");
       } else {
         print("An unexpected error occurred: $error");
       }
-      Navigator.pop(context);
+
+      loading = false;
       notifyListeners();
     }
-    });
   }
+
 
   // Future<void> verifierOtp(RegisterModel data, BuildContext context,
   //     Function Forword, int otp) async {
