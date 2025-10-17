@@ -295,32 +295,52 @@ class RegisterProvider extends ChangeNotifier {
     }
   }
 
-Future<String?> handleNotificationPermission(BuildContext context) async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  Future<String?> handleNotificationPermission(BuildContext context) async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  NotificationSettings settings =
-      await FirebaseMessaging.instance.requestPermission();
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-    // Permission granted, get token
-    return await FirebaseMessaging.instance.getToken();
-  } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
-    // Permission denied, prompt user to enable it in settings
-    bool? shouldOpenSettings = await showPermissionAlert(context);
-
-    if (shouldOpenSettings == true) {
-      openAppSettings();
-      return await waitForPermission(context); // Wait for the user to return
-    } else {
-      return null; // Proceed without FCM token
+    // Check if running on iOS simulator
+    if (Platform.isIOS) {
+      try {
+        // Try to get APNS token first on iOS
+        String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        if (apnsToken == null) {
+          // Running on simulator or APNS not available
+          print('APNS token not available (likely running on simulator)');
+          return null; // Return null to proceed without FCM token
+        }
+      } catch (e) {
+        print('Error getting APNS token: $e');
+        return null;
+      }
     }
-  } else {
-    return null;
-  }
-}
 
+    NotificationSettings settings =
+    await FirebaseMessaging.instance.requestPermission();
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      try {
+        // Permission granted, get token
+        return await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        print('Error getting FCM token: $e');
+        return null;
+      }
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      // Permission denied, prompt user to enable it in settings
+      bool? shouldOpenSettings = await showPermissionAlert(context);
+
+      if (shouldOpenSettings == true) {
+        openAppSettings();
+        return await waitForPermission(context);
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 Future<bool?> showPermissionAlert(BuildContext context) async {
   return await showDialog<bool>(
     context: context,
