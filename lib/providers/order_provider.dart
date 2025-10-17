@@ -448,20 +448,38 @@ class OrderProvider extends ChangeNotifier {
     updateStatus = true;
     notifyListeners();
 
-    try {
-      final response = await DioHelper.postData(
-          url: 'drivers/order/update-status',
-          data: {"order_id": orderId, "status": status});
+    final String url = 'drivers/order/update-status';
+    final Map<String, dynamic> requestData = {
+      "order_id": orderId,
+      "status": status,
+    };
 
-      print(response.data);
+    try {
+      print('🔹 [UPDATE ORDER STATUS]');
+      print('➡️ URL: $url');
+      print('📦 Data Sent: $requestData');
+
+      final response = await DioHelper.postData(
+        url: url,
+        data: requestData,
+      );
+
+      print('✅ Response Status Code: ${response.statusCode}');
+      print('✅ Response Data: ${response.data}');
+
       ShowSuccesSnackBar(
-          context, context.translate('successMessage.assignOrder'));
+        context,
+        context.translate('successMessage.assignOrder'),
+      );
+
       updateStatus = false;
       notifyListeners();
-      Navigator.of(context).popUntil((route) => route.isFirst);
+
+      Navigator.of(context).pop(); // ✅ Just close the bottom sheet
     } catch (error) {
-      print('zqs');
-      print(error);
+      print('❌ [ERROR] Failed to update order status');
+      print('Error details: $error');
+
       if (error is DioException &&
           (error.type == DioExceptionType.connectionTimeout ||
               error.type == DioExceptionType.connectionError)) {
@@ -469,13 +487,19 @@ class OrderProvider extends ChangeNotifier {
         notifyListeners();
 
         ShowErrorSnackBar(
-            context, context.translate('errorsMessage.connection'));
+          context,
+          context.translate('errorsMessage.connection'),
+        );
         return Future.error('connection timeout');
       } else if (error is DioException) {
         updateStatus = false;
         notifyListeners();
+
+        print('❌ Dio Error Response: ${error.response?.data}');
         ShowErrorSnackBar(
-            context, context.translate('errorsMessage.assignOrder'));
+          context,
+          context.translate('errorsMessage.assignOrder'),
+        );
         return Future.error('connection $error');
       } else {
         updateStatus = false;
@@ -484,4 +508,5 @@ class OrderProvider extends ChangeNotifier {
       }
     }
   }
+
 }

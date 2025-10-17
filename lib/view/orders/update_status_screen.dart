@@ -66,7 +66,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
           title: cText(
             text: context.translate('order.orderDetail.orderNumber') +
                 ' ' +
-                widget.data.lines!.driverOrderId.toString() +
+                widget.data.id.toString() +
                 '#',
             style: AppTextStyle.semiBoldBlack14,
           ),
@@ -107,8 +107,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
               ),
 
               // ✅ Conditional contact section
-              isAccepted
-                  ? Padding(
+              Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16, horizontal: 20),
                 child: Column(
@@ -251,8 +250,9 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                     )
                   ],
                 ),
-              )
-                  : Padding(
+              ),
+             ! isAccepted
+                  ?   Padding(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16, horizontal: 20),
                 child: Row(
@@ -283,7 +283,7 @@ class _UpdateStatusScreenState extends State<UpdateStatusScreen> {
                     ),
                   ],
                 ),
-              ),
+              ): Text(""),
 
               // ---- Keep rest of your screen unchanged ----
               Container(

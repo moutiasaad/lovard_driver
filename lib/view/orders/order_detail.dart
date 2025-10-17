@@ -50,6 +50,7 @@ class _OrderDetailState extends State<OrderDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final isAccepted = widget.data.status == "تم قبول الطلب";
     return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
       return Scaffold(
         appBar: AppBar(
@@ -92,7 +93,7 @@ class _OrderDetailState extends State<OrderDetail> {
           title: cText(
               text: context.translate('order.orderDetail.orderNumber') +
                   ' ' +
-                  widget.data.lines!.driverOrderId.toString() +
+                  widget.data.id.toString() +
                   '#',
               style: AppTextStyle.semiBoldBlack14),
           elevation: 0.5,

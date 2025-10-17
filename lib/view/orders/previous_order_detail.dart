@@ -51,6 +51,7 @@ class _PreviousOrderDetailState extends State<PreviousOrderDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final isAccepted = widget.data.status == "تم قبول الطلب";
     return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
       return Scaffold(
         appBar: AppBar(
@@ -61,7 +62,7 @@ class _PreviousOrderDetailState extends State<PreviousOrderDetail> {
           title: cText(
               text: context.translate('order.orderDetail.orderNumber') +
                   ' ' +
-                  widget.data.lines!.driverOrderId.toString() +
+                  widget.data.id.toString() +
                   '#',
               style: AppTextStyle.semiBoldBlack14),
           elevation: 0.5,
@@ -237,9 +238,47 @@ class _PreviousOrderDetailState extends State<PreviousOrderDetail> {
                 height: 6,
                 color: BorderColor.grey1,
               ),
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     spacing: 16,
+              //     children: [
+              //       Row(
+              //         mainAxisAlignment: MainAxisAlignment.start,
+              //         spacing: 8,
+              //         children: [
+              //           SvgIcon(
+              //             icon: AppIcons.profileFill,
+              //             width: 24,
+              //             height: 24,
+              //           ),
+              //           cText(
+              //               text:
+              //                   context.translate('order.orderDetail.customer'),
+              //               style: AppTextStyle.semiBoldPrimary20),
+              //         ],
+              //       ),
+              //       Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         spacing: 4,
+              //         children: [
+              //           cText(
+              //               text: widget.data.fullName ?? '',
+              //               style: AppTextStyle.semiBoldBlack14),
+              //           cText(
+              //               text: widget.data.phone ?? '',
+              //               style: AppTextStyle.regularBlack1_14),
+              //         ],
+              //       )
+              //     ],
+              //   ),
+              // ),
+              // ✅ Conditional contact section
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16, horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 16,
@@ -254,9 +293,10 @@ class _PreviousOrderDetailState extends State<PreviousOrderDetail> {
                           height: 24,
                         ),
                         cText(
-                            text:
-                                context.translate('order.orderDetail.customer'),
-                            style: AppTextStyle.semiBoldPrimary20),
+                          text: context
+                              .translate('order.orderDetail.marchent'),
+                          style: AppTextStyle.semiBoldPrimary20,
+                        ),
                       ],
                     ),
                     Column(
@@ -264,16 +304,155 @@ class _PreviousOrderDetailState extends State<PreviousOrderDetail> {
                       spacing: 4,
                       children: [
                         cText(
-                            text: widget.data.fullName ?? '',
-                            style: AppTextStyle.semiBoldBlack14),
-                        cText(
-                            text: widget.data.phone ?? '',
-                            style: AppTextStyle.regularBlack1_14),
+                          text: widget.data.merchant!.name ?? '',
+                          style: AppTextStyle.semiBoldBlack14,
+                        ),
+                        !widget.data.merchant!.whatsapp!.isEmpty ? Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // ✅ WhatsApp number
+                            InkWell(
+                              onTap: () async {
+                                final whatsappNumber =
+                                    widget.data.merchant?.whatsapp ?? '';
+                                final orderId = widget.data.lines
+                                    ?.driverOrderId
+                                    ?.toString() ??
+                                    '';
+
+                                if (whatsappNumber.isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content: Text('رقم واتساب غير متوفر'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                final message = Uri.encodeComponent(
+                                  'مرحبًا، أود الاستفسار عن الطلب رقم $orderId',
+                                );
+                                final url = Uri.parse(
+                                    'https://wa.me/$whatsappNumber?text=$message');
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                      Text('تعذر فتح تطبيق واتساب'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                widget.data.merchant?.whatsapp ?? '',
+                                style: AppTextStyle.regularBlack1_14,
+                              ),
+                            ),
+                            // ✅ WhatsApp Icon clickable
+                            widget.data.merchant?.whatsapp != null ? InkWell(
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () async {
+                                final whatsappNumber =
+                                    widget.data.merchant?.whatsapp ?? '';
+                                final orderId = widget.data.lines
+                                    ?.driverOrderId
+                                    ?.toString() ??
+                                    '';
+
+                                if (whatsappNumber.isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content: Text('رقم واتساب غير متوفر'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                final message = Uri.encodeComponent(
+                                  'مرحبًا، أود الاستفسار عن الطلب رقم $orderId',
+                                );
+                                final url = Uri.parse(
+                                    'https://wa.me/$whatsappNumber?text=$message');
+
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url,
+                                      mode: LaunchMode.externalApplication);
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                      Text('تعذر فتح تطبيق واتساب'),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: SvgIcon(
+                                icon: AppIcons.whatsapp,
+                                width: 22,
+                                height: 22,
+                                color: const Color(0xFF25D366),
+                              ),
+                            ):cText(
+                              text: '_',
+                              style: AppTextStyle.semiBoldBlack14,
+                            ),
+                          ],
+                        ):cText(
+                          text: '-',
+                          style: AppTextStyle.semiBoldBlack14,
+                        ),
                       ],
                     )
                   ],
                 ),
               ),
+             ! isAccepted
+                  ?   Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16, horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 4,
+                      children: [
+                        cText(
+                          text: widget.data.fullName ?? '',
+                          style: AppTextStyle.semiBoldBlack14,
+                        ),
+                        cText(
+                          text: widget.data.phone ?? '',
+                          style: AppTextStyle.regularBlack1_14,
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: BackgroundColor.grey1,
+                      ),
+                      child: SvgIcon(icon: AppIcons.phone),
+                    ),
+                  ],
+                ),
+              ): Text(""),
               Container(
                 width: double.infinity,
                 height: 6,
